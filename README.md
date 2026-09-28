@@ -18,6 +18,7 @@ Open Telegram, message your bot, send `/start`.
 | Var | Required | Default | Notes |
 | --- | --- | --- | --- |
 | `BOT_TOKEN` | yes | — | From @BotFather. Never commit it. |
+| `ADMIN_IDS` | for tools | empty (tools off) | Your numeric Telegram ID (`/whoami`). Enables `/py`, `/fetch` only for you |
 | `MODEL_API_BASE` | no | `https://text.pollinations.ai/openai` | Any OpenAI-compatible chat endpoint |
 | `MODEL_API_KEY` | no | empty | Bearer key when the endpoint needs one |
 | `MODEL_NAME` | no | `openai` | Model id for the endpoint |
@@ -39,3 +40,17 @@ Switch to Grok later: set `MODEL_API_BASE=https://api.x.ai/v1`,
 
 Stop your local test copy before going live — two pollers with one token
 fight each other and both error out.
+
+## Action tools (owner-only)
+
+- `/whoami` — anyone can use; shows their numeric Telegram ID.
+- `/py <code>` — runs Python in the bot container (10s limit, output
+  returned). Only IDs in `ADMIN_IDS`.
+- `/fetch <url> [question]` — downloads a page and AI-summarizes it.
+  Only IDs in `ADMIN_IDS`.
+- Chat remembers the last few exchanges per conversation (`HISTORY_LEN`,
+  default 8); `/reset` forgets.
+
+To enable tools: message the bot `/whoami`, copy your ID, add Railway
+variable `ADMIN_IDS=<your id>`. Never add strangers — `/py` is code
+execution inside your container.
